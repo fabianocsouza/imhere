@@ -2,35 +2,34 @@ import React, { useState } from 'react';
 import { Alert, FlatList, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { styles } from './styles';
+
 import { Participant } from '../../components/Participant';
 
 export function Home() {
-  const [participants, setParticipants ] = useState<string[]>([]);
-  const [name, setName ] = useState('');
+  const [ participants, setParticipants ] = useState<string[]>([]);
+  const [ participantName, setParticipantName ] = useState('');
 
-  function handleParticipantAdd(name: string){
-    if(participants.includes(name)){
-      setName('')
+  function handleParticipantAdd(){
+    if(participants.includes(participantName)){
+      setParticipantName('')
       return Alert.alert("Participante existe", "Já existe um participante na lista com este nome!")
     }
-    setParticipants(prevParticipant => [...prevParticipant, name]);
-    setName('')
+
+    setParticipants(prevState => [ ...prevState, participantName ]);
+    setParticipantName('')
   }
 
   function handleParticipantRemove(name: string) {
-      const listParticipants = participants.filter(item => (item !== name));
       Alert.alert("Remover: ", `Remover o participante ${name}?`, [
         {
           text: 'Sim',
-          onPress: () => setParticipants(listParticipants)
+          onPress: () => setParticipants(prevState => prevState.filter(participant => participant !== name))
         },
         {
           text: 'Não',
           style: 'cancel'
         }
       ])
-      
-      
   }
 
   return (
@@ -48,12 +47,12 @@ export function Home() {
               style={styles.input}
               placeholder='Nome do participante'
               placeholderTextColor='#6B6B6B'
-              value={name}
-              onChangeText={setName}
+              value={participantName}
+              onChangeText={setParticipantName}
             />
             <TouchableOpacity 
               style={styles.button}
-              onPress={() => handleParticipantAdd(name)}
+              onPress={handleParticipantAdd}
             >
               <Text style={styles.buttonText}>
                 +
